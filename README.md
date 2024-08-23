@@ -1,9 +1,6 @@
-# Northcoders News API
+# News API
 
-For instructions, please head over to [L2C NC News](https://l2c.northcoders.com/courses/be/nc-news).
+Create the environment variables:-
 
-
-
---- 
-
-This portfolio project was created as part of a Digital Skills Bootcamp in Software Engineering provided by [Northcoders](https://northcoders.com/)
+You will need to create a .env.test file and add PGDATABASE=, with the correct database name for that environment
+You will also need to create a .env.development and add PGDATABASE=, with the correct database name for that environment
