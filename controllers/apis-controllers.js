@@ -5,7 +5,6 @@ exports.getApiDetails = (req, res, next) => {
         res.status(200).send({apis})
     })
     .catch((err) => {
-        console.log(err)
         next(err)
     })
 }
