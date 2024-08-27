@@ -8,8 +8,25 @@ const data = require('../db/data/test-data/');
 beforeEach(() => seed(data));
 afterAll(() => db.end());
 
+describe('/api', () => {
+    test('GET:200 responds with all the api details', () => {
+        return request(app)
+        .get('/api')
+        .expect(200)
+        .then(({body}) => {
+            const keys = Object.keys(body.apis)
+            keys.forEach(key => {
+                expect(typeof body.apis[key]).toBe('object')
+                expect(typeof body.apis[key].description).toBe('string')
+                expect(typeof body.apis[key].queries).toBe('object')
+                expect(typeof body.apis[key].exampleResponse).toBe('object')
+            })
+        })
+    })
+})
+
 describe('/api/topics', () => {
-    test.only('GET:200 responds with a body with an array of topics', () => {
+    test('GET:200 responds with a body with an array of topics', () => {
         return request(app)
         .get('/api/topics')
         .expect(200)
@@ -21,7 +38,10 @@ describe('/api/topics', () => {
             })
         })
     })
-    test.only('GET:404 when endpoint does not exist', () => {
+})
+
+describe('/api/not-a-route', () => {
+    test('GET:404 when endpoint does not exist', () => {
         return request(app)
         .get('/api/not-a-route')
         .expect(404)

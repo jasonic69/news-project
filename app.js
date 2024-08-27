@@ -1,9 +1,16 @@
 const express = require('express');
 const app = express();
 
-const {getTopics,} = require('./controllers/topics-controllers');
+const {getApiDetails} = require('./controllers/apis-controllers');
+const {getTopics} = require('./controllers/topics-controllers');
+
+
+
+app.get('/api', getApiDetails);
 
 app.get('/api/topics', getTopics);
+
+
 
 app.all('/*',(req , res) => {
     res.status(404).send({ msg: "Route Not Found" });
