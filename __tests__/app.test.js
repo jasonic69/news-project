@@ -152,3 +152,36 @@ describe('/api/articles/:article_id/comments', () => {
         });
     });
 })
+
+describe('POST /api/articles/:article_id/comments', () => {
+    test('POST:201 responds with an object of the posted comment ', () => {
+        const postComment = {
+            username: 'lurker',
+            body: 'this is body text'
+          };
+        return request(app)
+        .post('/api/articles/1/comments')
+        .send(postComment)
+        .expect(201)
+        .then(({body}) => {
+            expect(body.comment.comment_id).toBe(19);
+            expect(body.comment.body).toBe('this is body text');
+            expect(body.comment.article_id).toBe(1);
+            expect(body.comment.author).toBe('lurker');
+            expect(body.comment.votes).toBe(0);
+        })
+    })
+    test('POST:400 sends an appropriate status and error message when username dosent exist', () => {
+        const postComment = {
+            username: 'not-a-valid-user',
+            body: 'this is body text'
+          };
+        return request(app)
+        .post('/api/articles/1/comments')
+        .send(postComment)
+        .expect(400)
+        .then((response) => {
+            expect(response.body.msg).toBe('Bad request');
+        });
+    });
+})
