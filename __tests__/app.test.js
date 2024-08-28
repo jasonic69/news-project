@@ -58,17 +58,15 @@ describe('/api/articles/:article_id', () => {
         .get('/api/articles/1')
         .expect(200)
         .then(({body}) => {
-            expect(body.article).toHaveLength(1)
-            body.article.forEach((article) => {
-                expect(typeof article.title).toBe('string')
-                expect(typeof article.article_id).toBe('number')
-                expect(typeof article.author).toBe('string')
-                expect(typeof article.body).toBe('string')
-                expect(typeof article.topic).toBe('string')
-                expect(typeof article.created_at).toBe('string')
-                expect(typeof article.votes).toBe('number')
-                expect(typeof article.article_img_url).toBe('string')              
-            })
+            expect(body.article.article_id).toBe(1);
+            expect(typeof body.article.title).toBe('string')
+            expect(typeof body.article.article_id).toBe('number')
+            expect(typeof body.article.author).toBe('string')
+            expect(typeof body.article.body).toBe('string')
+            expect(typeof body.article.topic).toBe('string')
+            expect(typeof body.article.created_at).toBe('string')
+            expect(typeof body.article.votes).toBe('number')
+            expect(typeof body.article.article_img_url).toBe('string')              
         })
     })
     test('GET:400 sends an appropriate status and error message when given an invalid id', () => {
@@ -87,12 +85,33 @@ describe('/api/articles/:article_id', () => {
             expect(response.body.msg).toBe('article does not exist');
         });
     });
-    test('GET:404 sends an appropriate status and error message when no id provided', () => {
+})
+
+describe('/api/articles', () => {
+    test('GET:200 responds with an array of article objects', () => {
         return request(app)
-        .get('/api/articles/')
-        .expect(404)
-        .then((response) => {
-            expect(response.body.msg).toBe('Route Not Found');
-        });
-    });
+        .get('/api/articles')
+        .expect(200)
+        .then(({body}) => {
+            expect(body.articles).toHaveLength(13)
+            body.articles.forEach((article) => {
+                expect(typeof article.title).toBe('string')
+                expect(typeof article.article_id).toBe('number')
+                expect(typeof article.author).toBe('string')
+                expect(typeof article.topic).toBe('string')
+                expect(typeof article.created_at).toBe('string')
+                expect(typeof article.votes).toBe('number')
+                expect(typeof article.article_img_url).toBe('string') 
+                expect(typeof article.comment_count).toBe('number')               
+            })
+        })
+    })
+    test('GET:200 articles are ordered by date by default and in descending order', () => {
+        return request(app)
+        .get('/api/articles')
+        .expect(200)
+        .then(({body}) => {
+            expect(body.articles).toBeSortedBy('created_at', {descending: true})
+        })
+    })
 })
