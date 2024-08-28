@@ -12,9 +12,16 @@ exports.selectArticle = (article_id) => {
 
 exports.selectArticles = () => {
 
-    sqlQuery = "SELECT  a.article_id,a.title,a.topic,a.author,a.created_at,a.votes,a.article_img_url,COUNT(b.article_id)::INT  AS comment_count FROM articles a LEFT JOIN comments b ON b.article_id = a.article_id GROUP BY a.article_id, b.article_id ORDER BY a.created_at DESC;"
+    const sqlQuery = "SELECT  a.article_id,a.title,a.topic,a.author,a.created_at,a.votes,a.article_img_url,COUNT(b.article_id)::INT  AS comment_count FROM articles a LEFT JOIN comments b ON b.article_id = a.article_id GROUP BY a.article_id, b.article_id ORDER BY a.created_at DESC;"
 
     return db.query(sqlQuery).then(({rows})=>{
         return rows       
     })
+}
+
+exports.selectComments = (article_id) => {
+    return db.query("SELECT * FROM comments WHERE article_id = $1 ORDER BY created_at DESC",[article_id]).then(({rows}) => {
+        if (rows.length === 0) return Promise.reject({status: 404, msg: "no comments found" });
+        return rows;
+    });
 }
