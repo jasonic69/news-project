@@ -3,13 +3,14 @@ const app = express();
 
 const {getApiDetails} = require('./controllers/apis-controllers');
 const {getTopics} = require('./controllers/topics-controllers');
-const {getArticleById, getArticles} = require('./controllers/articles-controllers');
+const {getArticleById, getArticles, getArticleCommentsById} = require('./controllers/articles-controllers');
 
 
 app.get('/api', getApiDetails);
 app.get('/api/topics', getTopics);
 app.get('/api/articles', getArticles);
 app.get('/api/articles/:article_id', getArticleById);
+app.get('/api/articles/:article_id/comments', getArticleCommentsById);
 
 
 app.use((err, req, res, next) => {

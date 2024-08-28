@@ -59,14 +59,13 @@ describe('/api/articles/:article_id', () => {
         .expect(200)
         .then(({body}) => {
             expect(body.article.article_id).toBe(1);
-            expect(typeof body.article.title).toBe('string')
-            expect(typeof body.article.article_id).toBe('number')
-            expect(typeof body.article.author).toBe('string')
-            expect(typeof body.article.body).toBe('string')
-            expect(typeof body.article.topic).toBe('string')
-            expect(typeof body.article.created_at).toBe('string')
-            expect(typeof body.article.votes).toBe('number')
-            expect(typeof body.article.article_img_url).toBe('string')              
+            expect(body.article.title).toBe('Living in the shadow of a great man')
+            expect(body.article.author).toBe('butter_bridge')
+            expect(body.article.body).toBe('I find this existence challenging')
+            expect(body.article.topic).toBe('mitch')
+            expect(body.article.created_at).toBe('2020-07-09T20:11:00.000Z')
+            expect(body.article.votes).toBe(100)
+            expect(body.article.article_img_url).toBe('https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700')              
         })
     })
     test('GET:400 sends an appropriate status and error message when given an invalid id', () => {
@@ -114,4 +113,42 @@ describe('/api/articles', () => {
             expect(body.articles).toBeSortedBy('created_at', {descending: true})
         })
     })
+})
+
+describe('/api/articles/:article_id/comments', () => {
+    test('GET:200 responds with an array of comments objects', () => {
+        return request(app)
+        .get('/api/articles/1/comments')
+        .expect(200)
+        .then(({body}) => {
+            expect(body.comments).toHaveLength(11)
+            const commentFormat = expect.objectContaining({
+                comment_id: expect.any(Number),
+                article_id: expect.any(Number),
+                votes: expect.any(Number),
+                created_at: expect.any(String),
+                author: expect.any(String),
+                body: expect.any(String),
+            })
+            body.comments.forEach((comment) => {
+                expect(comment).toEqual(commentFormat);
+            })
+        })
+    })
+    test('GET:200 comments are ordered by date by default and in descending order', () => {
+        return request(app)
+        .get('/api/articles/1/comments')
+        .expect(200)
+        .then(({body}) => {
+            expect(body.comments).toBeSortedBy('created_at', {descending: true})
+        })
+    })
+    test('GET:404 sends an appropriate status and error message when given an id that has no comments', () => {
+        return request(app)
+        .get('/api/articles/8/comments')
+        .expect(404)
+        .then((response) => {
+            expect(response.body.msg).toBe('no comments found');
+        });
+    });
 })
