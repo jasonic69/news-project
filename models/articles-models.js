@@ -25,3 +25,11 @@ exports.selectComments = (article_id) => {
         return rows;
     });
 }
+
+exports.postComment = (article_id, postDetails) => {
+    
+    return db.query("INSERT INTO comments (article_id, author, body) VALUES ($1,$2,$3) RETURNING *;",
+        [article_id, postDetails.username, postDetails.body]).then(({rows}) => {
+        return rows[0];
+    });
+}
