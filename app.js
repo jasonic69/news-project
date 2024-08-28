@@ -3,12 +3,12 @@ const app = express();
 
 const {getApiDetails} = require('./controllers/apis-controllers');
 const {getTopics} = require('./controllers/topics-controllers');
-const {getArticleById} = require('./controllers/articles-controllers');
-
+const {getArticleById, getArticles} = require('./controllers/articles-controllers');
 
 
 app.get('/api', getApiDetails);
 app.get('/api/topics', getTopics);
+app.get('/api/articles', getArticles);
 app.get('/api/articles/:article_id', getArticleById);
 
 
@@ -21,8 +21,8 @@ app.use((err, req, res, next) => {
 });
 
 app.use((err, req, res, next) => {
-    if (err.msg === "article does not exist"){
-        res.status(404).send({msg: err.msg});
+    if (err.status && err.msg){
+        res.status(err.status).send({msg: err.msg});
     } else {
         next(); 
     }
