@@ -235,3 +235,30 @@ describe('PATCH /api/articles/:article_id', () => {
         });
     });
 })
+
+describe('DELETE /api/comments/:comment_id', () => {
+    test('DELETE:204 when comment deleted responds with status code only - no body', () => {
+        return request(app)
+        .delete('/api/comments/1')
+        .expect(204)
+        .then((response) => {
+            expect(response.body).toEqual({})
+        })
+    })
+    test('DELETE:404 sends an appropriate status and error message when given a valid id that doesnt exist', () => {
+        return request(app)
+        .delete('/api/comments/999')
+        .expect(404)
+        .then((response) => {
+            expect(response.body.msg).toBe('comment does not exist');
+        })
+    })
+    test('DELETE:400 sends an appropriate status and error message when given invalid id', () => {
+        return request(app)
+        .delete('/api/comments/banana')
+        .expect(400)
+        .then((response) => {
+            expect(response.body.msg).toBe('Bad request');
+        })
+    })
+})
