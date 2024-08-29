@@ -4,6 +4,7 @@ const app = express();
 const {getApiDetails} = require('./controllers/apis-controllers');
 const {getTopics} = require('./controllers/topics-controllers');
 const {getArticleById, getArticles, getArticleCommentsById, postArticleCommentById, patchArticleVotesById} = require('./controllers/articles-controllers');
+const {deleteCommentById} = require('./controllers/comments-controllers');
 
 app.use(express.json());
 
@@ -14,6 +15,10 @@ app.get('/api/articles/:article_id', getArticleById);
 app.get('/api/articles/:article_id/comments', getArticleCommentsById);
 app.post('/api/articles/:article_id/comments', postArticleCommentById);
 app.patch('/api/articles/:article_id', patchArticleVotesById);
+app.delete('/api/comments/:comment_id', deleteCommentById);
+
+
+
 
 app.use((err, req, res, next) => {
     if (err.code === "22P02" || err.code === "23503"){

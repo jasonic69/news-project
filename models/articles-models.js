@@ -1,7 +1,4 @@
 const db = require("../db/connection");
-const { articleData } = require("../db/data/test-data");
-const articles = require("../db/data/test-data/articles");
-const comments = require("../db/data/test-data/comments");
 
 exports.selectArticle = (article_id) => {
     return db.query("SELECT * FROM articles WHERE article_id = $1",[article_id]).then(({rows}) => {
