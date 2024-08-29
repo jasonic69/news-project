@@ -185,3 +185,53 @@ describe('POST /api/articles/:article_id/comments', () => {
         });
     });
 })
+
+describe('PATCH /api/articles/:article_id', () => {
+    test('PATCH:200 responds with an object of the patched article ', () => {
+        const patchRequest = { inc_votes : -100};
+        return request(app)
+        .patch('/api/articles/1')
+        .send(patchRequest)
+        .expect(200)
+        .then(({body}) => {
+            expect(body.article.article_id).toBe(1);
+            expect(body.article.title).toBe('Living in the shadow of a great man');
+            expect(body.article.topic).toBe('mitch');
+            expect(body.article.author).toBe('butter_bridge');
+            expect(body.article.body).toBe('I find this existence challenging');
+            expect(typeof body.article.created_at).toBe('string');
+            expect(body.article.votes).toBe(0);
+            expect(body.article.article_img_url).toBe('https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700');
+        })
+    })
+    test('PATCH:400 sends an appropriate status and error message when given an invalid request', () => {
+        const patchRequest = { inc_votes : 'text'};
+        return request(app)
+        .patch('/api/articles/1')
+        .send(patchRequest)
+        .expect(400)
+        .then((response) => {
+            expect(response.body.msg).toBe('Bad request');
+        });
+    });
+    test('PATCH:400 sends an appropriate status and error message when given an invalid id', () => {
+        const patchRequest = { inc_votes : -100};
+        return request(app)
+        .patch('/api/articles/not-a-number')
+        .send(patchRequest)
+        .expect(400)
+        .then((response) => {
+            expect(response.body.msg).toBe('Bad request');
+        });
+    });
+    test('PATCH:404 sends an appropriate status and error message when given a valid but non-existent id', () => {
+        const patchRequest = { inc_votes : -100};
+        return request(app)
+        .patch('/api/articles/999')
+        .send(patchRequest)
+        .expect(404)
+        .then((response) => {
+            expect(response.body.msg).toBe('article does not exist');
+        });
+    });
+})
