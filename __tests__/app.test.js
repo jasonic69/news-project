@@ -113,7 +113,40 @@ describe('/api/articles', () => {
             expect(body.articles).toBeSortedBy('created_at', {descending: true})
         })
     })
+    test('GET:200 accept a sort_by query, order the response by the provided column and use the default descending order', () => {
+        return request(app)
+        .get('/api/articles?sort_by=author')
+        .expect(200)
+        .then(({body}) => {
+            expect(body.articles).toBeSortedBy('author', {descending: true})
+        })
+    })
+    test('GET:400 reject if sort_by query is not valid', () => {
+        return request(app)
+        .get('/api/articles?sort_by=not-a-valid-sort-option')
+        .expect(400)
+        .then((response) => {
+            expect(response.body.msg).toBe('Bad request');
+        });
+    })
+    test('GET:200 accept an order query, order the response by the provided value using default column', () => {
+        return request(app)
+        .get('/api/articles?order=asc')
+        .expect(200)
+        .then(({body}) => {
+            expect(body.articles).toBeSortedBy('created_at',{ascending: true})
+        })
+    })
+    test('GET:400 reject if order is not valid', () => {
+        return request(app)
+        .get('/api/articles?order=not-a-valid-order-option')
+        .expect(400)
+        .then((response) => {
+            expect(response.body.msg).toBe('Bad request');
+        });
+    })
 })
+
 
 describe('/api/articles/:article_id/comments', () => {
     test('GET:200 responds with an array of comments objects', () => {
