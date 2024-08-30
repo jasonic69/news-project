@@ -1,7 +1,10 @@
 const db = require("../db/connection");
 
 exports.selectArticle = (article_id) => {
-    return db.query("SELECT * FROM articles WHERE article_id = $1",[article_id]).then(({rows}) => {
+
+    const sqlQuery = "SELECT  a.*,COUNT(b.article_id)::INT AS comment_count FROM articles a LEFT JOIN comments b ON b.article_id = a.article_id WHERE a.article_id = $1 GROUP BY a.article_id"
+
+    return db.query(sqlQuery,[article_id]).then(({rows}) => {
         if (rows.length === 0) return Promise.reject({status: 404, msg: "article does not exist" });
         return rows[0];
     });
