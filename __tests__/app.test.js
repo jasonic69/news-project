@@ -134,12 +134,39 @@ describe('/api/articles', () => {
         .get('/api/articles?order=asc')
         .expect(200)
         .then(({body}) => {
-            expect(body.articles).toBeSortedBy('created_at',{ascending: true})
+            expect(body.articles).toBeSortedBy('created_at',{descending: false})
         })
     })
     test('GET:400 reject if order is not valid', () => {
         return request(app)
         .get('/api/articles?order=not-a-valid-order-option')
+        .expect(400)
+        .then((response) => {
+            expect(response.body.msg).toBe('Bad request');
+        });
+    })
+    test('GET:200 accept a valid topic query, which has articles ', () => {
+        return request(app)
+        .get('/api/articles?topic=mitch')
+        .expect(200)
+        .then(({body}) => {
+            expect(body.articles).toHaveLength(12)
+            body.articles.forEach((article) => {
+                expect(article.topic).toBe('mitch')              
+            })
+        })
+    })
+    test('GET:200 accept a valid topic query which has no articles ', () => {
+        return request(app)
+        .get('/api/articles?topic=paper')
+        .expect(200)
+        .then((response) => {
+            expect(response.body.msg).toBe('No articles found');
+        });
+    })
+    test('GET:400 sends an appropriate status and error message when given an invalid topic', () => {
+        return request(app)
+        .get('/api/articles?topic=not-a-valid-topic')
         .expect(400)
         .then((response) => {
             expect(response.body.msg).toBe('Bad request');
