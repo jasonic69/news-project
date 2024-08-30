@@ -7,9 +7,42 @@ exports.selectArticle = (article_id) => {
     });
 }
 
-exports.selectArticles = () => {
+exports.selectArticles = (sort_by='created_at', order='desc') => {
 
-    const sqlQuery = "SELECT  a.article_id,a.title,a.topic,a.author,a.created_at,a.votes,a.article_img_url,COUNT(b.article_id)::INT  AS comment_count FROM articles a LEFT JOIN comments b ON b.article_id = a.article_id GROUP BY a.article_id, b.article_id ORDER BY a.created_at DESC;"
+    const validSortByColumns = [
+        "article_id",
+        "title",
+        "topic",
+        "author",
+        "created_at",
+        "votes",
+        "article_img_url",
+        "comment_count"
+    ]
+
+    const validOrders = [  
+        "desc",
+        "asc"
+    ]
+
+    let sqlQuery = "SELECT  a.article_id,a.title,a.topic,a.author,a.created_at,a.votes,a.article_img_url,COUNT(b.article_id)::INT AS comment_count FROM articles a LEFT JOIN comments b ON b.article_id = a.article_id GROUP BY a.article_id, b.article_id"
+
+
+    if (sort_by){
+        if (!validSortByColumns.includes(sort_by)){
+            return Promise.reject({status: 400 , msg: 'Bad request'})
+        } else {
+            sqlQuery += ` ORDER BY ${sort_by}`
+        }
+    }
+
+    if (order){
+        if (!validOrders.includes(order)){
+            return Promise.reject({status: 400 , msg: 'Bad request'})
+        } else {
+            sqlQuery += ` ${order}`
+        }
+    }
 
     return db.query(sqlQuery).then(({rows})=>{
         return rows       
