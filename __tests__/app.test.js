@@ -342,3 +342,25 @@ describe('/api/users', () => {
         })
     })
 })
+/*
+describe('/api/users/:username', () => {
+    test('GET:200 responds with a user object', () => {
+        return request(app)
+        .get('/api/users/lurker')
+        .expect(200)
+        .then(({body}) => {
+            expect(body.user.username).toBe('lurker')
+            expect(body.user.name).toBe('do_nothing')
+            expect(body.user.avatar_url).toBe('https://www.golenbock.com/wp-content/uploads/2015/01/placeholder-user.png')
+        })
+    
+    })
+    test('404 sends an appropriate status and error message when given a valid id that doesnt exist', () => {
+        return request(app)
+        .get('/api/users/not-a-user')
+        .expect(404)
+        .then((response) => {
+            expect(response.body.msg).toBe('username does not exist');
+        })
+    })
+})*/
