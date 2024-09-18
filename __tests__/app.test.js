@@ -342,7 +342,7 @@ describe('/api/users', () => {
         })
     })
 })
-/*
+
 describe('/api/users/:username', () => {
     test('GET:200 responds with a user object', () => {
         return request(app)
@@ -363,4 +363,4 @@ describe('/api/users/:username', () => {
             expect(response.body.msg).toBe('username does not exist');
         })
     })
-})*/
+})

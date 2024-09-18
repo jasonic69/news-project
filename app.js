@@ -5,7 +5,7 @@ const {getApiDetails} = require('./controllers/apis-controllers');
 const {getTopics} = require('./controllers/topics-controllers');
 const {getArticleById, getArticles, getArticleCommentsById, postArticleCommentById, patchArticleVotesById} = require('./controllers/articles-controllers');
 const {deleteCommentById} = require('./controllers/comments-controllers');
-const {getUsers} = require('./controllers/users-controllers');
+const {getUsers, getUser} = require('./controllers/users-controllers');
 
 const cors = require('cors');
 app.use(cors());
@@ -20,7 +20,7 @@ app.post('/api/articles/:article_id/comments', postArticleCommentById);
 app.patch('/api/articles/:article_id', patchArticleVotesById);
 app.delete('/api/comments/:comment_id', deleteCommentById);
 app.get('/api/users', getUsers);
-//app.get('/api/users/:username', getUser);
+app.get('/api/users/:username', getUser);
 
 
 
